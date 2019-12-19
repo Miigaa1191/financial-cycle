@@ -52,5 +52,25 @@ def get_data(table_id = 'DT_NSO_0500_004V1'):
 
     if response.status_code == 200:
         tables_json = response.json()
+    else:
+        print('Not Found.')
+    
+    return tables_json
 
 
+# Get GDP        
+data_dict = get_data(table_id = 'DT_NSO_0500_004V1')['DataList']
+
+nominal_gdp = []
+
+for i in data_dict:
+    if i['SCR_ENG'] == 'GDP' and i['SCR_ENG1'] == 'GDP':
+        nominal_gdp.append([i['SCR_MN'], i['Period'], i['DTVAL_CO']])
+        
+
+real_gdp = []
+
+for i in data_dict:
+    if (i['SCR_ENG'] == 'GDP, at 2005 constant prices' or 
+        i['SCR_ENG'] == 'GDP, at 2010 constant prices') and (i['SCR_ENG1'] == 'GDP'):
+        real_gdp.append([i['SCR_MN'], i['Period'], i['DTVAL_CO']])
